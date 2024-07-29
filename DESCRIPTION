@@ -1,0 +1,12 @@
+Package: beamUtilsR
+Title: Beam Utilities for R
+Version: 0.0.0.9000
+Authors@R: 
+    person("Robert", "Klein", , "reklein@att.net", role = c("aut", "cre"))
+Description: Utilities for loading and running r scripts in Beams.
+License: MIT + file LICENSE
+Import: tools,DataExplorer, ggplot2, magrittr,devtools,dplyr,htmlTable,jsonlite,psych,tibble
+Suggets: DataExplorer, devtools, dplyr, ggplot2, htmlTable, jsonlite, psych, tibble
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
