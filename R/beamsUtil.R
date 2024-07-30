@@ -10,22 +10,19 @@ options(repos = c(CRAN="@CRAN@",cli.num_colors=1))
 .inst <- .packages %in% installed.packages()
 if(length(.packages[!.inst]) > 0) install.packages(.packages[!.inst], repos = "http://cran.rstudio.com/")
 
-#'  @importFrom htmlTable
-#'  @importFrom DataExplorer
-#'  @importFrom devtools
-#'  @importFrom dplyr
-#'  @importFrom ggplot2
-#'  @importFrom jsonlite
-#'  @importFrom psych
-#'  @importFrom tibble
-
 # Load packages into session
 lapply(.packages, require, character.only=TRUE)
 
+# validFunction.gmt function
+# called internally within this package to catch errors
 validFunct.gmat <- function(usr_Funct, message = 'function', silent = TRUE){
   result =  tryCatch( {usr_Funct}, error = function(e){msg = conditionMessage(e); if(!silent)message(e); invisible((structure(msg, class = 'try-error')));});
   return(result);
 };
+
+# S4_to_dataframe.gmat function
+# called internally within this package to capture output of an
+# s4 object
 S4_to_dataframe.gmat <- function(s4obj) {
   lst <- capture.output(str(s4obj))
   for(i in 1:length(list)){
@@ -34,6 +31,23 @@ S4_to_dataframe.gmat <- function(s4obj) {
   return(lst)
 }
 
+
+#' trycatchReturn.gmat function
+#'
+#' @description
+#' trycatchReturn.gmat is used by beams to capture messages, warnings and
+#' errors when submitting return user defined fuctions. Notice that
+#' semi-colons are embedded into the string after each function.
+#'
+#' @param expr
+#'
+#' @return list of messages, warnings and errors
+#' @export
+#'
+#' @examples
+#' return_ERR = return_ERR = trycatchReturn.gmat({"+codeStr+"});
+#' info = append(info, return_ERR);
+#' rm(list = ls(pattern = '_ERR'));
 trycatchReturn.gmat <- function(expr) {
   mess <- warn <- err <- value <- NULL
   value <- withCallingHandlers(
@@ -44,6 +58,23 @@ trycatchReturn.gmat <- function(expr) {
     , message =function(m) {mess <<- m; invokeRestart("muffleMessage"); })
   return(list( rtn_message=mess, rtn_warning=warn, rtn_error=err));
 };
+
+#' trycatchReturn.gmat function
+#'
+#' @description
+#' trycatchExec.gmat is used by beams to capture messages, warnings and
+#' errors when submitting user defined fuctions. Notice that
+#' semi-colons are embedded into the string after each function.
+#'
+#' @param expr
+#'
+#' @return list of messages, warnings and errors
+#' @export
+#'
+#' @examples
+#' trycatchExec.gmat({"+rmEqStr+"});
+#' info = return_ERR[2:4];
+#'  rm(list = ls(pattern = '_ERR'));
 trycatchExec.gmat <- function(expr) {
   mess <- warn <- err <- value <- NULL
   value <- withCallingHandlers(
@@ -58,36 +89,68 @@ trycatchExec.gmat <- function(expr) {
   }
   return(list( typeof = typeof(value),rtn_message=mess, rtn_warning=warn, rtn_error=err));
 };
-trycatchCode.gmat <- function(expr) {
-  mess <- warn <- err <- NULL
-  value <- withCallingHandlers(
-    tryCatch(expr
-             , error=function(e) { err <<- e; NULL })
-    , warning =function(w) {warn <<- w; invokeRestart("muffleWarning"); }
-    , message =function(m) {mess <<- m; invokeRestart("muffleMessage"); })
-  return(list( value =value, code_message=mess, code_warning=warn, code_error=err));
-}
 
-trycatchCode_chrVector.gmat <- function(expr) {
-  mess <- warn <- err <- NULL
-  value <- withCallingHandlers(
-    tryCatch(expr
-             , error=function(e) { err <<- e; NULL })
-    , warning =function(w) {warn <<- w; invokeRestart("muffleWarning"); }
-    , message =function(m) {mess <<- m; invokeRestart("muffleMessage"); })
-  return(list( value = iconv(value, "latin1", "ASCII", sub=""), code_message=mess, code_warning=warn, code_error=err));
-}
+# trycatchCode.gmat <- function(expr) {
+#   mess <- warn <- err <- NULL
+#   value <- withCallingHandlers(
+#     tryCatch(expr
+#              , error=function(e) { err <<- e; NULL })
+#     , warning =function(w) {warn <<- w; invokeRestart("muffleWarning"); }
+#     , message =function(m) {mess <<- m; invokeRestart("muffleMessage"); })
+#   return(list( value =value, code_message=mess, code_warning=warn, code_error=err));
+# }
 
-# Add is infinite method to data frame object
+
+# trycatchCode_chrVector.gmat <- function(expr) {
+#   mess <- warn <- err <- NULL
+#   value <- withCallingHandlers(
+#     tryCatch(expr
+#              , error=function(e) { err <<- e; NULL })
+#     , warning =function(w) {warn <<- w; invokeRestart("muffleWarning"); }
+#     , message =function(m) {mess <<- m; invokeRestart("muffleMessage"); })
+#   return(list( value = iconv(value, "latin1", "ASCII", sub=""), code_message=mess, code_warning=warn, code_error=err));
+# }
+
+
+#' is.infinite.data.frame function
+#'
+#' @description
+#' Add is infinite method to data frame object to determine if object is infinite.
+#'
+#' @param obj Object to test
+#'
+#' @return true or false
+#' @export
 is.infinite.data.frame <- function(obj){
   sapply(obj,FUN = function(x) all(is.infinite(x)))
 }
 
+#' is.finite.data.frame function
+#'
+#' @description
+#' Add is infinite method to data frame object to determine if object is finite.
+#'
+#' @param obj Object to test
+#'
+#' @return true or false
+#' @export
 is.finite.data.frame <- function(obj){
   sapply(obj,FUN = function(x) all(!is.infinite(x)))
 }
 
-#get DB connections
+
+#' conObject.gmat function
+#'
+#' @description
+#' Get list of available db in r environment
+#'
+#' @param conList connection to the database server
+#'
+#' @return list of db connections
+#' @export
+#'
+#' @examples
+#' info<-jsonlite::toJSON(conObject.gmat('dbsqlcon'));
 conObject.gmat <- function(conList){
   if(is.null(conList)){
     objList1 = "No Connection Established"
@@ -130,8 +193,18 @@ conObject.gmat <- function(conList){
   return(objList1);
 }
 
-#get Installed packages with dataframes
+#' dfObjects.gmat
+#'
+#' @description
+#' Get list of installed packages with dataframes
+#'
+#' @return list of packages
+#' @export
+#'
+#' @examples
+#' info<-jsonlite::toJSON(dfObjects.gmat());
 dfObjects.gmat <- function(){
+
   level0a <- (library())
   level0a <- as.data.frame(level0a$results)
   level0a = dplyr::distinct(level0a, Package, .keep_all = TRUE)
@@ -182,7 +255,20 @@ dfObjects.gmat <- function(){
   return(objList1);
 }
 
-#get in memory objects in list
+#
+
+#' InMemList.gmat
+#'
+#' @description
+#' Get list of in memory objects
+#'
+#' @param exclude list of objects to exclude
+#'
+#' @return list of objects
+#' @export
+#'
+#' @examples
+#' info<-jsonlite::toJSON(InMemList.gmat("warn|err|.gmat|is.infinite.data.frame|is.finite.data.frame|is.infinite.data.table"));
 InMemList.gmat <- function(exclude=NULL){
   objs = data.frame(as.character(ls(envir = .GlobalEnv)),stringsAsFactors = FALSE )
   colnames(objs) = c('fieldName')
@@ -210,7 +296,16 @@ InMemList.gmat <- function(exclude=NULL){
 #
 
 
-#get in memory objects
+#' InMemObjects.gmat
+#'
+#' @description
+#' Get list of in memory objects
+#'
+#' @return list of objects
+#' @export
+#'
+#' @examples
+#' test2<-jsonlite::toJSON(InMemObjects.gmat());
 InMemObjects.gmat <- function(){
   state = structure(list(opened = logical(), disabled = logical(),selected = logical()), class = "data.frame");
   state = rbind(state,c(FALSE,FALSE,FALSE))
@@ -244,6 +339,15 @@ InMemObjects.gmat <- function(){
   return(levelc);
 }
 
+#' basicStatFunct.gmat
+#'
+#' @description
+#' Return basic statistics for selected data
+#'
+#' @param sel_data selected user data
+#'
+#' @return list of objects
+#' @export
 basicStatFunct.gmat <- function(sel_dat){
   varNames <-data.frame(variable= character(1),type= character(1),stringsAsFactors = FALSE); for( i in names(sel_dat)){varNames = rbind(varNames, c(as.character(i),as.character(paste0(class(sel_dat[[i]]), collapse = '-'))));}
   names(varNames) <- c('variable', 'type');
@@ -257,7 +361,8 @@ basicStatFunct.gmat <- function(sel_dat){
   varNames;
 }
 
-## Returns obs missing information
+##
+
 ##conInfoFunct.gmat <- function(sel_dat){
 ##    datStr <- capture.output(str( sel_dat ));
 ##     varNames <-data.frame(variable= character(1),type= character(1),stringsAsFactors = FALSE); for( i in names(sel_dat)){varNames = rbind(varNames, c(as.character(i),as.character(paste0(class(sel_dat[[i]]), collapse = ##'-'))));}
@@ -275,7 +380,17 @@ basicStatFunct.gmat <- function(sel_dat){
 ##	 inforVar;
 ##}
 
-## Returns obs missing information
+
+#' conInfoFunct2.gmat
+#'
+#' @description
+#' Returns obs missing information
+#'
+#' @param sel_data selected user data
+#' @param type data type
+#'
+#' @return variable name
+#' @export
 conInfoFunct2.gmat <- function(sel_dat,type=''){
   if(type == 'ts'){
     varNames <-data.frame(variable= character(1),type= character(1),stringsAsFactors = FALSE); for( i in names(ts_df( sel_dat ))){varNames = rbind(varNames, c(as.character(i),as.character(paste0(class(ts_df( sel_dat )[[i]]), collapse = '-'))));}
@@ -294,7 +409,17 @@ conInfoFunct2.gmat <- function(sel_dat,type=''){
   varNames;
 }
 
-## Returns svg object containing the plot type requested
+
+#' WrapPlot.gmat
+#'
+#' @description
+#' Returns svg object containing the plot type requested
+#' which is required to dsiplay graph in beams
+#'
+#' @param plotfunction function that is to be wrapped
+#'
+#' @return svg
+#' @export
 WrapPlot.gmat <- function(plotfunction){
   file_TMP = tempfile("plot", fileext = ".svg")
   SVG_TMP = svg (file_TMP, width=6, height=6)
@@ -305,7 +430,20 @@ WrapPlot.gmat <- function(plotfunction){
   con2_TMP = close( con_TMP )
   return(svg2_Plot)
 }
-## Returns svg object containing the plot type requested
+
+
+
+#' PlotFunct.gmat
+#'
+#' @description
+#' Returns svg object containing the plot type requested
+#' which is required to display graph in beams
+#'
+#' @param plotDat data object to be plotted
+#' @param typeplot name of plot type
+#'
+#' @return svg
+#' @export
 PlotFunct.gmat <- function(plotDat, typePlot){
   if(length(grep('ERROR_FLG:', plotDat ))>0){
     svg2 <-'Error';
@@ -365,7 +503,18 @@ PlotFunct.gmat <- function(plotDat, typePlot){
   svg2;
 }
 
-# Extract library news into a variable for display
+
+#
+
+#' extract_libnews.gmat
+#'
+#' @description
+#' Extract library news into a variable for display
+#'
+#' @param packName package name
+#'
+#' @return text
+#' @export
 extract_libnews.gmat <- function(packName)
 {
   dM <- news(package=packName)
@@ -374,10 +523,19 @@ extract_libnews.gmat <- function(packName)
 
 }
 
-# Extract language help into a variable for display
+#' extract_langhelp.gmat
+#'
+#' @description
+#' Extract language help into a variable for display
+#'
+#' @param pkg package name
+#' @param href package location
+#' @param lang language default R
+#'
+#' @return html
+#' @export
 extract_langhelp.gmat <- function(pkg,href,lang="R")
 {
-  print("extract_langhelp.gmat")
   rLoc <- paste0(R.home(),"/")
   if(href=="Undefined"){
     rawHTML <- paste(readLines(paste0(rLoc,"/doc/html/index.html")), collapse="")
@@ -393,7 +551,17 @@ extract_langhelp.gmat <- function(pkg,href,lang="R")
   paste0(rawStyle,'<div class="container">',rawHTML,'</div>')
 }
 
-# Extract library help into a variable for display
+
+#' extract_libhelp.gmat
+#'
+#' @description
+#' Extract library help into a variable for display
+#'
+#' @param pkg package name
+#' @param lang language default R
+#'
+#' @return html
+#' @export
 extract_libhelp.gmat <- function(pkg,lang="R")
 {
   #print("extract_libhelp.gmat")
@@ -442,8 +610,15 @@ extract_libhelp.gmat <- function(pkg,lang="R")
 # 	paste0(rawStyle,'<div class="container">',rawHTML,'</div>')
 # }
 
-# Extract help search results into a variable for display
-
+#' extract_helpSearch.gmat
+#'
+#' @description
+#' Extract help search results into a variable for display
+#'
+#' @param keyWord keyWord to be used in search
+#'
+#' @return html
+#' @export
 extract_helpSearch.gmat<- function(keyWord){
   if(keyWord=="")
     return
@@ -536,7 +711,18 @@ extract_helpSearch.gmat<- function(keyWord){
 
 }
 
-# Extract library help into a variable for display
+
+#' extract_searchpage.gmat
+#'
+#' @description
+#' Extract language search page help into a variable for display
+#'
+#' @param pkg package name
+#' @param href package location
+#' @param lang language default R
+#'
+#' @return html
+#' @export
 extract_searchpage.gmat <- function(pkg,href,lang='R')
 {
   href=sub("../..",R.home(),href, ignore.case = TRUE)
@@ -572,7 +758,18 @@ extract_searchpage.gmat <- function(pkg,href,lang='R')
   paste0(rawStyle,'<div class="container">',rawHTML,'</div>')
 }
 
-# Extract library help into a variable for display
+
+#' extract_searchpage.gmat
+#'
+#' @description
+#' Extract language search page help into a variable for display
+#'
+#' @param pkg package name
+#' @param href package location
+#' @param lang language default R
+#'
+#' @return text
+#' @export
 extract_libpage.gmat <- function(pkg,href,lang='R')
 {
   print(paste0("extract_libpage.gmat",pkg,href,lang))
@@ -708,7 +905,19 @@ extract_libpage.gmat <- function(pkg,href,lang='R')
   paste0(rawStyle,'<div class="container">',rawHTML,'</div>')
 }
 
-# Extract help into a variable for display
+
+#' extract_help.gmat
+#'
+#' @description
+#' Extract help page
+#'
+#' @param pkg package name
+#' @param fn function
+#' @param to return format
+#' @param lang language default R
+#'
+#' @return text, html, latex, ex
+#' @export
 extract_help.gmat <- function(pkg, fn = NULL, to = c("txt", "html", "latex", "ex"), lang="R")
 {
   print("extract_help.gmat")
@@ -738,7 +947,16 @@ extract_help.gmat <- function(pkg, fn = NULL, to = c("txt", "html", "latex", "ex
 # sapply(obj,FUN = function(x) all(is.infinite(x)))
 #}
 
-# Add is infinite method to data table object
+
+#' is.infinite.data.table
+#'
+#' @description
+#' Add is.infinite method to data table object
+#'
+#' @param selected object
+#'
+#' @return true or false
+#' @export
 is.infinite.data.table <- function(obj){
   sapply(obj,FUN = function(x) all(is.infinite(x)))
 
@@ -763,7 +981,14 @@ is.infinite.data.table <- function(obj){
 #  return(levelc)
 #}
 
-#get Installed packages with dataframes
+
+#' fnObjects.gmat
+#'
+#' @description
+#' get Installed packages with dataframes
+#'
+#' @return list of packages that export data frames
+#' @export
 fnObjects.gmat <- function(){
   allPacks = sapply(.packages(all.available = TRUE), function(obj) packageDescription(obj))
   Title = as.character(unlist(sapply(allPacks, "[", "Title")))
@@ -831,6 +1056,13 @@ fnObjects.gmat <- function(){
 #
 ##########################################################################
 
+#' Rd2list.gmat
+#'
+#' @description
+#' convert RD object to list
+#'
+#' @return list
+#' @export
 Rd2list.gmat <- function(Rd){
   names(Rd) <- substring(sapply(Rd, attr, "Rd_tag"),2);
   temp_args <- Rd$arguments;
@@ -856,6 +1088,8 @@ Rd2list.gmat <- function(Rd){
 #   Rd2list.gmat(myrd);
 # }
 
+# clean help description
+# internal function
 cleanDesc.gmat <- function(desc){
   desc = gsub("list\\(\"","", desc)
   desc = gsub("\"\\)","", desc)
@@ -882,6 +1116,16 @@ cleanDesc.gmat <- function(desc){
 ##  substr(x,1,nchar(x)-n)
 ##}
 
+#' toolCode.gmat
+#'
+#' @description
+#' return beam canvas object for selected function in a give package
+#'
+#' @param packTarg package name
+#' @param targVal function name
+#'
+#' @return array
+#' @export
 toolCode.gmat <- function(packTarg, targVal){
   myhelp <- getHelpList.gmat(targVal, as.character(packTarg));
   data <- as.list(sapply(myhelp,function(x) {x <- gsub("\n", "",x)}))
@@ -998,7 +1242,20 @@ toolCode.gmat <- function(packTarg, targVal){
   fullFun$portAttrs = list(portAttrs)
   return(fullFun)
 }
-# get list of packages in script and environment
+
+#' packsCode.gmat
+#'
+#' @description
+#' extract and return list of packages used in script and environment
+#'
+#' @param codeTxt code text to be evaluate
+#' @param comment keep comments embedded in codeTxt
+#' @param blank keep blank rows
+#' @param arrow replace = with <-
+#' @param envInfo include R environment information
+#'
+#' @return array
+#' @export
 packsCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE, envInfo = FALSE){
 
   #Get Script Packages
@@ -1055,7 +1312,16 @@ tidyCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE, 
   return (list(pkgLst,envLst,codeTxt,envInfoPlatform,envInfoPackages))
 }
 
-#conver rownames to numeric is valid (Used in View Object)
+
+#' convRowName.gmat
+#'
+#' @description
+#' convert rownames to numeric is valid (Used in beams View Object)
+#'
+#' @param rowname row name to convert
+#'
+#' @return array
+#' @export
 convRowName.gmat <- function(rowname){
   if (suppressWarnings(all(!is.na(as.numeric(as.character(rowname)))))) {
     as.numeric(as.character(rowname))
@@ -1064,13 +1330,28 @@ convRowName.gmat <- function(rowname){
   }
 }
 
-#funList <- fnObjects.gmat()
-#print(funList[c(4659:4661),])
+
+#' fnObjectsList.gmat
+#'
+#' @description
+#' funList <- fnObjects.gmat()
+#'
+#' @return fnObjects.gmat() results
+#' @export
 fnObjectsList.gmat <- function(){
   return(fnObjects.gmat())
 }
 
-#Return columns and class for a data source
+
+#' fnObjectsList.gmat
+#'
+#' @description
+#' Return columns and class for a data source
+#'
+#' @param df data frame
+#'
+#' @return dataframe
+#' @export
 colClasses.gmat <- function(df) {
   colInfo = as.data.frame(lapply(df, function(x) paste(class(x), collapse = ',')))
   colInfo = as.data.frame(t(colInfo))
@@ -1081,7 +1362,16 @@ colClasses.gmat <- function(df) {
   return (colInfo)
 }
 
-#Return class and other information for a data source
+#' dsClasses.gmat
+#'
+#' @description
+#' Return class and other information for a data source
+#'
+#' @param df data frame
+#' @param dfName data frame name
+#'
+#' @return dataframe
+#' @export
 dsClasses.gmat <- function(df,dfName) {
   dfInfo = data.frame('text' = dfName)
   colnames(dfInfo) = c('text')
@@ -1093,6 +1383,16 @@ dsClasses.gmat <- function(df,dfName) {
   return (dfInfo)
 }
 
+#' colDS.gmat
+#'
+#' @description
+#' Return column information for dataframe
+#'
+#' @param df data frame
+#' @param dfName data frame name
+#'
+#' @return dataframe
+#' @export
 colDS.gmat <- function(df,dfName){
   if(is.vector(df, mode = "numeric")& !is.null(names(df)) & !any(is.na(names(df)))){
     return("")
@@ -1135,6 +1435,16 @@ colDS.gmat <- function(df,dfName){
   }
 }
 
+#' checkDS.gmat
+#'
+#' @description
+#' Return object type for a selected object
+#'
+#' @param df data frame
+#' @param dfName data frame name
+#'
+#' @return dataframe
+#' @export
 checkDS.gmat <- function(df,dfName){
   if(is.vector(df, mode = "numeric")& !is.null(names(df)) & !any(is.na(names(df)))){
     return(
@@ -1227,4 +1537,4 @@ checkDS.gmat <- function(df,dfName){
     )
   }
 }
-7
+
