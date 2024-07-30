@@ -90,15 +90,26 @@ trycatchExec.gmat <- function(expr) {
   return(list( typeof = typeof(value),rtn_message=mess, rtn_warning=warn, rtn_error=err));
 };
 
-# trycatchCode.gmat <- function(expr) {
-#   mess <- warn <- err <- NULL
-#   value <- withCallingHandlers(
-#     tryCatch(expr
-#              , error=function(e) { err <<- e; NULL })
-#     , warning =function(w) {warn <<- w; invokeRestart("muffleWarning"); }
-#     , message =function(m) {mess <<- m; invokeRestart("muffleMessage"); })
-#   return(list( value =value, code_message=mess, code_warning=warn, code_error=err));
-# }
+#' trycatchCode.gmat
+#'
+#' @description
+#' trycatchCode.gmat is used by beams to capture messages, warnings and
+#' errors when executing user defined fuctions. Notice that
+#' semi-colons are embedded into the string after each function.
+#'
+#' @param expr
+#'
+#' @return list of messages, warnings and errors
+#' @export
+trycatchCode.gmat <- function(expr) {
+  mess <- warn <- err <- NULL
+  value <- withCallingHandlers(
+    tryCatch(expr
+             , error=function(e) { err <<- e; NULL })
+    , warning =function(w) {warn <<- w; invokeRestart("muffleWarning"); }
+    , message =function(m) {mess <<- m; invokeRestart("muffleMessage"); })
+  return(list( value =value, code_message=mess, code_warning=warn, code_error=err));
+}
 
 
 # trycatchCode_chrVector.gmat <- function(expr) {
