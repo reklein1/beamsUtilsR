@@ -1089,15 +1089,18 @@ Rd2list.gmat <- function(Rd){
   return(myrd);
 }
 
-# getHelpList.gmat <- function(...){
-#   thefile <- help(...)
-#   if(is.na(thefile[1:1]))
-#   {
-#     return(list("title" = 'not found', "name" = 'not found', "alias" = 'not found', "description" = 'not found', "usage" = 'not found', "value" = 'not found', "section" = 'not found',"examples" = 'not found', "arguments" = 'not found'))
-#   }
-#   myrd <- utils:::.getHelpFile(thefile);
-#   Rd2list.gmat(myrd);
-# }
+# getHelpList.gmat
+# check help list
+# internal function
+getHelpList.gmat <- function(...){
+  thefile <- help(...)
+  if(is.na(thefile[1:1]))
+  {
+    return(list("title" = 'not found', "name" = 'not found', "alias" = 'not found', "description" = 'not found', "usage" = 'not found', "value" = 'not found', "section" = 'not found',"examples" = 'not found', "arguments" = 'not found'))
+  }
+  myrd <- utils:::.getHelpFile(thefile);
+  Rd2list.gmat(myrd);
+}
 
 # clean help description
 # internal function
