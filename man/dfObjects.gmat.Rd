@@ -12,6 +12,3 @@ list of packages
 \description{
 Get list of installed packages with dataframes
 }
-\examples{
-info<-jsonlite::toJSON(dfObjects.gmat());
-}

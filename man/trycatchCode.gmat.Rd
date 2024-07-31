@@ -13,7 +13,5 @@ trycatchCode.gmat(expr)
 list of messages, warnings and errors
 }
 \description{
-trycatchCode.gmat is used by beams to capture messages, warnings and
-errors when executing user defined fuctions. Notice that
-semi-colons are embedded into the string after each function.
+trycatchCode.gmat is used by beams to capture messages, warnings and errors when executing user defined fuctions. Notice that semi-colons are embedded into the string after each function.
 }
