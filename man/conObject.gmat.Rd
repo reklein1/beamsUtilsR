@@ -15,6 +15,3 @@ list of db connections
 \description{
 Get list of available db in r environment
 }
-\examples{
-info<-jsonlite::toJSON(conObject.gmat('dbsqlcon'));
-}

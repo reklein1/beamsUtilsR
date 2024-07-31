@@ -7,7 +7,7 @@
 trycatchExec.gmat(expr)
 }
 \arguments{
-\item{expr}{}
+\item{expr}{expression provided by user to be executed}
 }
 \value{
 list of messages, warnings and errors
@@ -16,9 +16,4 @@ list of messages, warnings and errors
 trycatchExec.gmat is used by beams to capture messages, warnings and
 errors when submitting user defined fuctions. Notice that
 semi-colons are embedded into the string after each function.
-}
-\examples{
-trycatchExec.gmat({"+rmEqStr+"});
-info = return_ERR[2:4];
- rm(list = ls(pattern = '_ERR'));
 }

@@ -12,6 +12,3 @@ list of objects
 \description{
 Get list of in memory objects
 }
-\examples{
-test2<-jsonlite::toJSON(InMemObjects.gmat());
-}

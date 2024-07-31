@@ -7,7 +7,7 @@
 trycatchReturn.gmat(expr)
 }
 \arguments{
-\item{expr}{}
+\item{expr}{expression provided by user to be executed}
 }
 \value{
 list of messages, warnings and errors
@@ -16,9 +16,4 @@ list of messages, warnings and errors
 trycatchReturn.gmat is used by beams to capture messages, warnings and
 errors when submitting return user defined fuctions. Notice that
 semi-colons are embedded into the string after each function.
-}
-\examples{
-return_ERR = return_ERR = trycatchReturn.gmat({"+codeStr+"});
-info = append(info, return_ERR);
-rm(list = ls(pattern = '_ERR'));
 }

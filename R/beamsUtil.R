@@ -39,15 +39,10 @@ S4_to_dataframe.gmat <- function(s4obj) {
 #' errors when submitting return user defined fuctions. Notice that
 #' semi-colons are embedded into the string after each function.
 #'
-#' @param expr
+#' @param expr expression provided by user to be executed
 #'
 #' @return list of messages, warnings and errors
 #' @export
-#'
-#' @examples
-#' return_ERR = return_ERR = trycatchReturn.gmat({"+codeStr+"});
-#' info = append(info, return_ERR);
-#' rm(list = ls(pattern = '_ERR'));
 trycatchReturn.gmat <- function(expr) {
   mess <- warn <- err <- value <- NULL
   value <- withCallingHandlers(
@@ -66,15 +61,10 @@ trycatchReturn.gmat <- function(expr) {
 #' errors when submitting user defined fuctions. Notice that
 #' semi-colons are embedded into the string after each function.
 #'
-#' @param expr
+#' @param expr expression provided by user to be executed
 #'
 #' @return list of messages, warnings and errors
 #' @export
-#'
-#' @examples
-#' trycatchExec.gmat({"+rmEqStr+"});
-#' info = return_ERR[2:4];
-#'  rm(list = ls(pattern = '_ERR'));
 trycatchExec.gmat <- function(expr) {
   mess <- warn <- err <- value <- NULL
   value <- withCallingHandlers(
@@ -93,11 +83,9 @@ trycatchExec.gmat <- function(expr) {
 #' trycatchCode.gmat
 #'
 #' @description
-#' trycatchCode.gmat is used by beams to capture messages, warnings and
-#' errors when executing user defined fuctions. Notice that
-#' semi-colons are embedded into the string after each function.
+#' trycatchCode.gmat is used by beams to capture messages, warnings and errors when executing user defined fuctions. Notice that semi-colons are embedded into the string after each function.
 #'
-#' @param expr
+#' @param expr expression provided by user to be executed
 #'
 #' @return list of messages, warnings and errors
 #' @export
@@ -159,9 +147,6 @@ is.finite.data.frame <- function(obj){
 #'
 #' @return list of db connections
 #' @export
-#'
-#' @examples
-#' info<-jsonlite::toJSON(conObject.gmat('dbsqlcon'));
 conObject.gmat <- function(conList){
   if(is.null(conList)){
     objList1 = "No Connection Established"
@@ -211,9 +196,6 @@ conObject.gmat <- function(conList){
 #'
 #' @return list of packages
 #' @export
-#'
-#' @examples
-#' info<-jsonlite::toJSON(dfObjects.gmat());
 dfObjects.gmat <- function(){
 
   level0a <- (library())
@@ -277,9 +259,6 @@ dfObjects.gmat <- function(){
 #'
 #' @return list of objects
 #' @export
-#'
-#' @examples
-#' info<-jsonlite::toJSON(InMemList.gmat("warn|err|.gmat|is.infinite.data.frame|is.finite.data.frame|is.infinite.data.table"));
 InMemList.gmat <- function(exclude=NULL){
   objs = data.frame(as.character(ls(envir = .GlobalEnv)),stringsAsFactors = FALSE )
   colnames(objs) = c('fieldName')
@@ -314,9 +293,6 @@ InMemList.gmat <- function(exclude=NULL){
 #'
 #' @return list of objects
 #' @export
-#'
-#' @examples
-#' test2<-jsonlite::toJSON(InMemObjects.gmat());
 InMemObjects.gmat <- function(){
   state = structure(list(opened = logical(), disabled = logical(),selected = logical()), class = "data.frame");
   state = rbind(state,c(FALSE,FALSE,FALSE))
