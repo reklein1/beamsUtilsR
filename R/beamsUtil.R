@@ -1297,9 +1297,23 @@ packsCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE,
 
   return (list(pkgLst,envLst,codeFmt,envInfoPlatform,envInfoPackages))
 }
-# get list of packages in script and environment
-tidyCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE, envInfo = FALSE){
 
+
+
+#' tidyCode.gmat
+#'
+#' @description
+#' get list of packages in script and environment
+#'
+#' @param codeTxt code text to be evaluate
+#' @param comment keep comments embedded in codeTxt
+#' @param blank keep blank rows
+#' @param arrow replace = with <-
+#' @param envInfo include R environment information
+#'
+#' @return array
+#' @export
+tidyCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE, envInfo = FALSE){
   #Get Script Packages
   m <- gregexpr('[[:alnum:]]+::', codeTxt)
   pkg <- regmatches(codeTxt, m)
