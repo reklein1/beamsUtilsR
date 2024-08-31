@@ -15,6 +15,3 @@ list of objects
 \description{
 Get list of in memory objects
 }
-\examples{
-info<-jsonlite::toJSON(InMemList.gmat("warn|err|.gmat|is.infinite.data.frame|is.finite.data.frame|is.infinite.data.table"));
-}

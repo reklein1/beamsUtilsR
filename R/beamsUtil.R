@@ -43,11 +43,6 @@ S4_to_dataframe.gmat <- function(s4obj) {
 #'
 #' @return list of messages, warnings and errors
 #' @export
-#'
-#' @examples
-#' return_ERR = return_ERR = trycatchReturn.gmat({"+codeStr+"});
-#' info = append(info, return_ERR);
-#' rm(list = ls(pattern = '_ERR'));
 trycatchReturn.gmat <- function(expr) {
   mess <- warn <- err <- value <- NULL
   value <- withCallingHandlers(
@@ -71,10 +66,6 @@ trycatchReturn.gmat <- function(expr) {
 #' @return list of messages, warnings and errors
 #' @export
 #'
-#' @examples
-#' trycatchExec.gmat({"+rmEqStr+"});
-#' info = return_ERR[2:4];
-#'  rm(list = ls(pattern = '_ERR'));
 trycatchExec.gmat <- function(expr) {
   mess <- warn <- err <- value <- NULL
   value <- withCallingHandlers(
@@ -160,8 +151,6 @@ is.finite.data.frame <- function(obj){
 #' @return list of db connections
 #' @export
 #'
-#' @examples
-#' info<-jsonlite::toJSON(conObject.gmat('dbsqlcon'));
 conObject.gmat <- function(conList){
   if(is.null(conList)){
     objList1 = "No Connection Established"
@@ -212,8 +201,7 @@ conObject.gmat <- function(conList){
 #' @return list of packages
 #' @export
 #'
-#' @examples
-#' info<-jsonlite::toJSON(dfObjects.gmat());
+
 dfObjects.gmat <- function(){
 
   level0a <- (library())
@@ -278,8 +266,6 @@ dfObjects.gmat <- function(){
 #' @return list of objects
 #' @export
 #'
-#' @examples
-#' info<-jsonlite::toJSON(InMemList.gmat("warn|err|.gmat|is.infinite.data.frame|is.finite.data.frame|is.infinite.data.table"));
 InMemList.gmat <- function(exclude=NULL){
   objs = data.frame(as.character(ls(envir = .GlobalEnv)),stringsAsFactors = FALSE )
   colnames(objs) = c('fieldName')
@@ -315,8 +301,6 @@ InMemList.gmat <- function(exclude=NULL){
 #' @return list of objects
 #' @export
 #'
-#' @examples
-#' test2<-jsonlite::toJSON(InMemObjects.gmat());
 InMemObjects.gmat <- function(){
   state = structure(list(opened = logical(), disabled = logical(),selected = logical()), class = "data.frame");
   state = rbind(state,c(FALSE,FALSE,FALSE))
@@ -1297,7 +1281,20 @@ packsCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE,
 
   return (list(pkgLst,envLst,codeFmt,envInfoPlatform,envInfoPackages))
 }
-# get list of packages in script and environment
+
+#' tidyCode.gmat
+#'
+#' @description
+#' get list of packages in script and environment
+#'
+#' @param codeTxt code text to be evaluate
+#' @param comment keep comments embedded in codeTxt
+#' @param blank keep blank rows
+#' @param arrow replace = with <-
+#' @param envInfo include R environment information
+#'
+#' @return array
+#' @export
 tidyCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE, envInfo = FALSE){
 
   #Get Script Packages
