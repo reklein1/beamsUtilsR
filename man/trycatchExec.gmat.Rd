@@ -7,7 +7,7 @@
 trycatchExec.gmat(expr)
 }
 \arguments{
-\item{expr}{}
+\item{expr}{expression provided by user to be executed}
 }
 \value{
 list of messages, warnings and errors

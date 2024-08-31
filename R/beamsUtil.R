@@ -39,7 +39,7 @@ S4_to_dataframe.gmat <- function(s4obj) {
 #' errors when submitting return user defined fuctions. Notice that
 #' semi-colons are embedded into the string after each function.
 #'
-#' @param expr
+#' @param expr expression provided by user to be executed
 #'
 #' @return list of messages, warnings and errors
 #' @export
@@ -61,11 +61,14 @@ trycatchReturn.gmat <- function(expr) {
 #' errors when submitting user defined fuctions. Notice that
 #' semi-colons are embedded into the string after each function.
 #'
-#' @param expr
+#' @param expr expression provided by user to be executed
 #'
 #' @return list of messages, warnings and errors
 #' @export
+<<<<<<< HEAD
 #'
+=======
+>>>>>>> 1ea5ea33d0172598436ef773264e6677912b6be6
 trycatchExec.gmat <- function(expr) {
   mess <- warn <- err <- value <- NULL
   value <- withCallingHandlers(
@@ -84,11 +87,9 @@ trycatchExec.gmat <- function(expr) {
 #' trycatchCode.gmat
 #'
 #' @description
-#' trycatchCode.gmat is used by beams to capture messages, warnings and
-#' errors when executing user defined fuctions. Notice that
-#' semi-colons are embedded into the string after each function.
+#' trycatchCode.gmat is used by beams to capture messages, warnings and errors when executing user defined fuctions. Notice that semi-colons are embedded into the string after each function.
 #'
-#' @param expr
+#' @param expr expression provided by user to be executed
 #'
 #' @return list of messages, warnings and errors
 #' @export
@@ -150,7 +151,10 @@ is.finite.data.frame <- function(obj){
 #'
 #' @return list of db connections
 #' @export
+<<<<<<< HEAD
 #'
+=======
+>>>>>>> 1ea5ea33d0172598436ef773264e6677912b6be6
 conObject.gmat <- function(conList){
   if(is.null(conList)){
     objList1 = "No Connection Established"
@@ -200,8 +204,11 @@ conObject.gmat <- function(conList){
 #'
 #' @return list of packages
 #' @export
+<<<<<<< HEAD
 #'
 
+=======
+>>>>>>> 1ea5ea33d0172598436ef773264e6677912b6be6
 dfObjects.gmat <- function(){
 
   level0a <- (library())
@@ -265,7 +272,10 @@ dfObjects.gmat <- function(){
 #'
 #' @return list of objects
 #' @export
+<<<<<<< HEAD
 #'
+=======
+>>>>>>> 1ea5ea33d0172598436ef773264e6677912b6be6
 InMemList.gmat <- function(exclude=NULL){
   objs = data.frame(as.character(ls(envir = .GlobalEnv)),stringsAsFactors = FALSE )
   colnames(objs) = c('fieldName')
@@ -300,7 +310,10 @@ InMemList.gmat <- function(exclude=NULL){
 #'
 #' @return list of objects
 #' @export
+<<<<<<< HEAD
 #'
+=======
+>>>>>>> 1ea5ea33d0172598436ef773264e6677912b6be6
 InMemObjects.gmat <- function(){
   state = structure(list(opened = logical(), disabled = logical(),selected = logical()), class = "data.frame");
   state = rbind(state,c(FALSE,FALSE,FALSE))
@@ -1281,6 +1294,7 @@ packsCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE,
 
   return (list(pkgLst,envLst,codeFmt,envInfoPlatform,envInfoPackages))
 }
+<<<<<<< HEAD
 
 #' tidyCode.gmat
 #'
@@ -1296,7 +1310,25 @@ packsCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE,
 #' @return array
 #' @export
 tidyCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE, envInfo = FALSE){
+=======
+>>>>>>> 1ea5ea33d0172598436ef773264e6677912b6be6
 
+
+
+#' tidyCode.gmat
+#'
+#' @description
+#' get list of packages in script and environment
+#'
+#' @param codeTxt code text to be evaluate
+#' @param comment keep comments embedded in codeTxt
+#' @param blank keep blank rows
+#' @param arrow replace = with <-
+#' @param envInfo include R environment information
+#'
+#' @return array
+#' @export
+tidyCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE, envInfo = FALSE){
   #Get Script Packages
   m <- gregexpr('[[:alnum:]]+::', codeTxt)
   pkg <- regmatches(codeTxt, m)
