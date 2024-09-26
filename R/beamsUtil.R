@@ -1236,7 +1236,7 @@ toolCode.gmat <- function(packTarg, targVal){
 #' packsCode.gmat
 #'
 #' @description
-#' extract and return list of packages used in script and environment
+#' extract and return formated code, packages and enviroment info
 #'
 #' @param codeTxt code text to be evaluate
 #' @param comment keep comments embedded in codeTxt
@@ -1244,7 +1244,7 @@ toolCode.gmat <- function(packTarg, targVal){
 #' @param arrow replace = with <-
 #' @param envInfo include R environment information
 #'
-#' @return array
+#' @return list
 #' @export
 packsCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE, envInfo = FALSE){
   #Get Script Packages

@@ -24,8 +24,8 @@ packsCode.gmat(
 \item{envInfo}{include R environment information}
 }
 \value{
-array
+list
 }
 \description{
-extract and return list of packages used in script and environment
+extract and return formated code, packages and enviroment info
 }
