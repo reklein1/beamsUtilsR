@@ -1247,7 +1247,6 @@ toolCode.gmat <- function(packTarg, targVal){
 #' @return array
 #' @export
 packsCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE, envInfo = FALSE){
-
   #Get Script Packages
   m <- gregexpr('[[:alnum:]]+::', codeTxt)
   pkg <- regmatches(codeTxt, m)
@@ -1261,10 +1260,10 @@ packsCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE,
   pkgEnv <- as.data.frame(search())
   envLst <- as.vector(pkgEnv$`search()` <- sub("package:", "", pkgEnv$`search()`))
   envLst <- envLst[!envLst %in% c('.GlobalEnv','Autoloads')]
-  envInfoPlatform <- devtools::session_info()$platform
+  envInfoPlatform <- invisible(capture.output(sessioninfo::platform_info()))
   envInfoPackages <- ''
   if(envInfo==TRUE)
-    envInfoPackages <- invisible(capture.output(devtools::session_info()$packages))
+    envInfoPackages <- invisible(capture.output(sessioninfo::package_info()))
 
   #Format Script
   codeFmt <- invisible(tidy_source(text = codeTxt, comment = comment, blank = blank, arrow = arrow)$text.tidy)
