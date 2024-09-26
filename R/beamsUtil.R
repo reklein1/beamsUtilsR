@@ -65,6 +65,7 @@ trycatchReturn.gmat <- function(expr) {
 #'
 #' @return list of messages, warnings and errors
 #' @export
+#'
 trycatchExec.gmat <- function(expr) {
   mess <- warn <- err <- value <- NULL
   value <- withCallingHandlers(
@@ -147,6 +148,7 @@ is.finite.data.frame <- function(obj){
 #'
 #' @return list of db connections
 #' @export
+#'
 conObject.gmat <- function(conList){
   if(is.null(conList)){
     objList1 = "No Connection Established"
@@ -196,6 +198,11 @@ conObject.gmat <- function(conList){
 #'
 #' @return list of packages
 #' @export
+
+#'
+
+
+
 dfObjects.gmat <- function(){
 
   level0a <- (library())
@@ -259,6 +266,10 @@ dfObjects.gmat <- function(){
 #'
 #' @return list of objects
 #' @export
+
+#'
+
+
 InMemList.gmat <- function(exclude=NULL){
   objs = data.frame(as.character(ls(envir = .GlobalEnv)),stringsAsFactors = FALSE )
   colnames(objs) = c('fieldName')
@@ -293,6 +304,10 @@ InMemList.gmat <- function(exclude=NULL){
 #'
 #' @return list of objects
 #' @export
+
+#'
+
+
 InMemObjects.gmat <- function(){
   state = structure(list(opened = logical(), disabled = logical(),selected = logical()), class = "data.frame");
   state = rbind(state,c(FALSE,FALSE,FALSE))
@@ -1272,8 +1287,6 @@ packsCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE,
 
   return (list(pkgLst,envLst,codeFmt,envInfoPlatform,envInfoPackages))
 }
-
-
 
 #' tidyCode.gmat
 #'
