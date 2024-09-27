@@ -1270,6 +1270,8 @@ packsCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE,
   pkgReq <- unlist(str_extract_all(codeTxt,"(?<=required\\(()).+(?=\\))"))
   pkgLst <- unique(c(pkgRef,pkgLib,pkgReq))
   pkgLst <- unlist(lapply(pkgLst, function(l) {str_trim(l,"both")}))
+  if(is.null(pkgLst))
+    pkgLst <- ''
 
   #Get Environment Packages
   pkgEnv <- as.data.frame(search())
@@ -1318,7 +1320,7 @@ tidyCode.gmat <- function(codeTxt, comment = TRUE, blank = FALSE, arrow = TRUE, 
   envInfoPlatform <- invisible(capture.output(sessioninfo::platform_info()))
   envInfoPackages <- ''
   if(envInfo==TRUE)
-    envInfoPackages <- invisible(capture.output(sessioninfo::package_info()))
+    envInfoPackages <- invisible(capture.output(devtools::session_info()$packages))
 
   #Format Script
   codeFmt <- invisible(tidy_source(text = codeTxt, comment = comment, blank = blank, arrow = arrow)$text.tidy)
