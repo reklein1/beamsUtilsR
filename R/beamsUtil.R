@@ -1163,12 +1163,15 @@ toolCode.gmat <- function(packTarg, targVal){
           }else{
             argFun[x+(z-1),5] =  "N"
           }
+
+          argFun[x+(z-1),7] = 'stndAttrs'
+
           if(argFun[x+(z-1),4] == 'Y'){
             argFun[x+(z-1),6] = 'Input'
-            argFun[x+(z-1),7] = 'stndAttrs'
+            #argFun[x+(z-1),7] = 'stndAttrs'
           }else{
             argFun[x+(z-1),6] = 'KeyPair'
-            argFun[x+(z-1),7] = 'custAttrs'
+            #argFun[x+(z-1),7] = 'custAttrs'
           }
         }
         x=x+(z-1)
@@ -1190,11 +1193,13 @@ toolCode.gmat <- function(packTarg, targVal){
         }
       }
 
+      argFun[x,7] = 'stndAttrs'
+
       if(argFun[x,4] == 'Y'){
-        argFun[x,7] = 'stndAttrs'
+        #argFun[x,7] = 'stndAttrs'
         argFun[x,6] = 'Input'
       }else{
-        argFun[x,7] = 'custAttrs'
+        #argFun[x,7] = 'custAttrs'
         argFun[x,6] = 'KeyPair'
       }
     }
