@@ -1164,6 +1164,7 @@ toolCode.gmat <- function(packTarg, targVal){
             argFun[x+(z-1),5] =  "N"
           }
 
+          #REK 241210 Removed custAttrs to simplify app useage
           argFun[x+(z-1),7] = 'stndAttrs'
 
           if(argFun[x+(z-1),4] == 'Y'){
